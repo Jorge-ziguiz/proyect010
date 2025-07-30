@@ -19,7 +19,7 @@ import es.cic.curso._5.proy009.model.Arbol;
 import es.cic.curso._5.proy009.service.ArbolService;
 
 @RestController
-@RequestMapping("Arbol")
+@RequestMapping("/arbol")
 public class ArbolController {
 
     //Creamos e instanciamos el logger como Final porque me da la gana
@@ -54,7 +54,7 @@ public class ArbolController {
 
     //APRENDE A LEER (GET)
     @GetMapping("/{id}")
-    public Arbol getById (@PathVariable long id){
+    public Arbol get (@PathVariable long id){
         return arbolService.getArbolById(id);
     }
 

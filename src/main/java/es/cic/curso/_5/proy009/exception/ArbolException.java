@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ArbolException extends RuntimeException{
 
     public ArbolException (long id){
-        super ("No existe el Arbol con ID "+id);
+        super("No existe el Arbol con ID "+id);
     }
 }

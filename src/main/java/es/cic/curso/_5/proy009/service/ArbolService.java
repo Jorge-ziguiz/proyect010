@@ -32,7 +32,7 @@ public class ArbolService {
     public Arbol create(Arbol arbol) {
         LOGGER.info("Creamos un arbol");
         if (arbol.getId() != null) {
-
+            throw new ModificationSecurityException("No se puede crear un arbol con un ID DADO POR EL USUARIO");
         }
         return arbolRepository.save(arbol);
     }
@@ -48,8 +48,7 @@ public class ArbolService {
         LOGGER.info("Buscando Arbol con id {}", id);
 
         return arbolRepository.findById(id)
-                .orElseThrow(() -> new ModificationSecurityException(
-                        "No se encontró el Arbol con el ID especificado {}" + id));
+                .orElseThrow(() -> new ArbolException(id));
     }
 
     // Update

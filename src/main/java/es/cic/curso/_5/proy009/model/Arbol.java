@@ -3,15 +3,17 @@ package es.cic.curso._5.proy009.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 
 @Entity //Marcamos que es una entidad 
-@Table(name = "arbon")
+@Table(name = "arbol")
 public class Arbol {
 
     @Id
@@ -25,6 +27,7 @@ public class Arbol {
     private int edad;
     private double altura;
 
+    @OneToMany(mappedBy = "arbol", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Rama> ramas = new ArrayList<>();
 
     public Long getId() {

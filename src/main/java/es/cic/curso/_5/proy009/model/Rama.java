@@ -27,7 +27,7 @@ public class Rama {
         private boolean tieneHojas;
 
         @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "arbol_id")
+        @JoinColumn(name = "arbol")
         private Arbol arbol;
 
         //Getters And Setters
