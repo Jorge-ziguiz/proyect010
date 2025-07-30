@@ -21,102 +21,102 @@ public class ArbolService {
 
     private final ArbolRepository arbolRepository;
 
-    public ArbolService(ArbolRepository arbolRepository){
-        this.arbolRepository=arbolRepository;
+    public ArbolService(ArbolRepository arbolRepository) {
+        this.arbolRepository = arbolRepository;
     }
 
-    //Vamos con el CRUD
+    // Vamos con el CRUD
 
-    //Create
+    // Create
 
-    public Arbol create(Arbol arbol){
+    public Arbol create(Arbol arbol) {
         LOGGER.info("Creamos un arbol");
-        if (arbol.getId() != null){
-            
+        if (arbol.getId() != null) {
+
         }
         return arbolRepository.save(arbol);
     }
 
-    //Read
+    // Read
 
-    public List<Arbol> get(){
+    public List<Arbol> get() {
         LOGGER.info("Obteniendo lista de todos los arboles....");
-        return arbolRepository.findAll();     
+        return arbolRepository.findAll();
     }
-    
-    public Arbol getArbolById(long id){
+
+    public Arbol getArbolById(long id) {
         LOGGER.info("Buscando Arbol con id {}", id);
 
         return arbolRepository.findById(id)
-                                .orElseThrow(() 
-                                -> new ModificationSecurityException("No se encontró el Arbol con el ID especificado {}"+id));
+                .orElseThrow(() -> new ModificationSecurityException(
+                        "No se encontró el Arbol con el ID especificado {}" + id));
     }
 
-    //Update 
+    // Update
 
-    public Arbol update (Arbol arbol){
+    public Arbol update(Arbol arbol) {
 
         LOGGER.info("Actualizando Arbol...");
 
-        //Filtramos
-        //Si no tiene ID
-        if (arbol.getId() == null){
+        // Filtramos
+        // Si no tiene ID
+        if (arbol.getId() == null) {
 
-            //Actualicamos a los de sistemas de lo que pasa
+            // Actualicamos a los de sistemas de lo que pasa
             LOGGER.info("Se intenta crear arbol con un id nulo");
 
-            //Lanzamos una excepcion de seguridad
+            // Lanzamos una excepcion de seguridad
             throw new ModificationSecurityException("El id no puede ser Nulo");
-            
-        //Si NO  hay un arbol con ese ID 
-        }else if (!arbolRepository.existsById(arbol.getId())){
 
-            //Informamos a los amigos de sistemas
+        // Si NO hay un arbol con ese ID
+        } else if (!arbolRepository.existsById(arbol.getId())) {
+
+            // Informamos a los amigos de sistemas
             LOGGER.info("Se intenta actualizar in arbol que no existe");
 
-            //Lanzamos un ArbolException porque ya existe
+            // Lanzamos un ArbolException porque ya existe
             throw new ArbolException(arbol.getId());
-        
-        //En cualquier otro caso
-        }else {
 
-            //Que pesados los de sistemas macho
+        // En cualquier otro caso
+        } else {
+
+            // Que pesados los de sistemas macho
             LOGGER.info("Arbol Actualizado Correcramente");
 
-            //Devolvemos el arbol creado
+            // Devolvemos el arbol creado
             return arbolRepository.save(arbol);
         }
     }
 
-    //DELETE
+    // DELETE
 
-    public void deleteById(long id){
+    public void deleteById(long id) {
 
-        //les voy a empezar a meter chistes en el logger 
+        // les voy a empezar a meter chistes en el logger
         LOGGER.info("Borrando Arboles...");
 
-        //Si no existe el coso
+        // Si no existe el coso
         if (!arbolRepository.existsById(id)) {
 
-            //Les decimos a los panas 
+            // Les decimos a los panas
             LOGGER.info("No se puede eliminar un arbol que no existe");
 
-            //Lanzamos una excepcion
+            // Lanzamos una excepcion
             throw new ArbolException(id);
 
-        //Si esta pos
+            // Si esta pos
         } else {
-            //Hacemos el delete
+            // Hacemos el delete
             arbolRepository.deleteById(id);
 
-            //Y se lo decimos a los compas
-            LOGGER.info("Borrado satisfactoriemante arbol con ID " +id);
+            // Y se lo decimos a los compas
+            LOGGER.info("Borrado satisfactoriemante arbol con ID " + id);
         }
     }
 
-    public void deleteAll(){
+    public void deleteAll() {
 
-        //El clasico
+        // El clasico
         LOGGER.info("Borramos TODOS LOS ARBOLES GENTE, PANICO (pero solo si habia algo importante)");
 
         arbolRepository.deleteAll();
