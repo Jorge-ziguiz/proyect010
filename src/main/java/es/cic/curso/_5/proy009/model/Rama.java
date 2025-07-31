@@ -29,7 +29,7 @@ public class Rama {
         private boolean tieneHojas;
 
         @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "arbol")
+        @JoinColumn(name = "arbol_id")
         @JsonIgnore
         private Arbol arbol;
 

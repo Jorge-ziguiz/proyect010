@@ -3,10 +3,13 @@ package es.cic.curso._5.proy009.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+//import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+//import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,14 +26,20 @@ public class Arbol {
     private Long id;
 
     @Version
-    private long version;
+    private Long version;
 
     private String especie;
     private int edad;
     private double altura;
 
-    @OneToMany(mappedBy = "arbol", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Rama> ramas = new ArrayList<>();
+    @OneToMany(
+        mappedBy        = "arbol",          //LO dirige la propia clase
+        cascade         = CascadeType.ALL,  //cascade : si
+        orphanRemoval   = true,             //Borramos los que no tengan referencia
+        fetch           = FetchType.LAZY    //cargamos solo al llegar al controller(?)
+    )
+    private List<Rama> listaRamas = new ArrayList<>();
+
 
     public Long getId() {
         return id;
@@ -41,7 +50,7 @@ public class Arbol {
     public long getVersion() {
         return version;
     }
-    public void setVersion(long version) {
+    public void setVersion(Long version) {
         this.version = version;
     }
     public String getEspecie() {
@@ -62,20 +71,21 @@ public class Arbol {
     public void setAltura(double altura) {
         this.altura = altura;
     }
+    public List<Rama> getRamas() {
+        return listaRamas;
+    }
+    public void setRamas(List<Rama> listaRamas) {
+        this.listaRamas = listaRamas;
+    }
 
+    //Para poder añadir las ramas a la lista 
     public void addRama(Rama rama) {
-        ramas.add(rama);
+        listaRamas.add(rama);
         rama.setArbol(this); // importante!
     }
     public void removeRama(Rama rama) {
-        ramas.remove(rama);
+        listaRamas.remove(rama);
         rama.setArbol(null);
-    }
-    public List<Rama> getRamas() {
-        return ramas;
-    }
-    public void setRamas(List<Rama> ramas) {
-        this.ramas = ramas;
     }
 
     @Override
@@ -106,6 +116,6 @@ public class Arbol {
     @Override
     public String toString() {
         return "Arbol [id = " + id + ", especie = " + especie + ", edad = " + edad +
-                ", altura =" + altura + ", ramas " + ramas +" ]";
+                ", altura =" + altura + ", ramas " + listaRamas +" ]";
     }
 }
