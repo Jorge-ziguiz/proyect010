@@ -3,6 +3,8 @@ package es.cic.curso._5.proy009.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -61,15 +63,49 @@ public class Arbol {
         this.altura = altura;
     }
 
-    public void agregarRama(Rama rama) {
+    public void addRama(Rama rama) {
         ramas.add(rama);
         rama.setArbol(this); // importante!
     }
-
-    public void quitarRama(Rama rama) {
+    public void removeRama(Rama rama) {
         ramas.remove(rama);
         rama.setArbol(null);
     }
-    
+    public List<Rama> getRamas() {
+        return ramas;
+    }
+    public void setRamas(List<Rama> ramas) {
+        this.ramas = ramas;
+    }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Rama other = (Rama) obj;
+        if (id == null) {
+            if (other.getId() != null)
+                return false;
+        } else if (!id.equals(other.getId()))
+            return false;
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+    
+    @Override
+    public String toString() {
+        return "Arbol [id = " + id + ", especie = " + especie + ", edad = " + edad +
+                ", altura =" + altura + ", ramas " + ramas +" ]";
+    }
 }

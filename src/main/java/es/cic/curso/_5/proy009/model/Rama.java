@@ -1,5 +1,7 @@
 package es.cic.curso._5.proy009.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -28,6 +30,7 @@ public class Rama {
 
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "arbol")
+        @JsonIgnore
         private Arbol arbol;
 
         //Getters And Setters

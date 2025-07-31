@@ -185,7 +185,7 @@ public class ArbolControllerIntegrationTest {
          */
         @Test
         @DisplayName("DELETE /motos/{id} Elimina el registro")
-        void shouldDeleteCoche() throws Exception {
+        void shouldDeleteArbol() throws Exception {
 
                 // PEC
 

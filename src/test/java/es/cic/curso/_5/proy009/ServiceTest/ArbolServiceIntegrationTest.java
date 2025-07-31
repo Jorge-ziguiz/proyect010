@@ -37,7 +37,7 @@ public class ArbolServiceIntegrationTest {
 
     @Test
      @DisplayName("Crea un coche nuevo y le asigna automaticamente un ID")
-     void shouldCreateMoto(){
+     void shouldCreateArbol(){
 
         
         // PREPARAMOS
@@ -137,7 +137,7 @@ public class ArbolServiceIntegrationTest {
     //UPDATE
     @Test
     @DisplayName("Modifica una moto Existente")
-    void  shouldUpdateMoto(){
+    void  shouldUpdateArbol(){
 
         //PREPARAMOS
         Arbol arbol1 = new Arbol();
@@ -198,7 +198,7 @@ public class ArbolServiceIntegrationTest {
 
     @Test
     @DisplayName("Elimina una entrada de moto existente en la BBDD")
-    void shuldDeleteMoto(){
+    void shuldDeleteArbol(){
 
         //PREPARAMOS
         Arbol arbol = new Arbol();
