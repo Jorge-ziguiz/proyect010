@@ -14,6 +14,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class ArbolTieneRamasIntegrationTest {
     private ObjectMapper objectMapper;
 
     @Test
-    public void testArbolTieneRamas() throws Exception{
+    public void testCrearArbolConRamas() throws Exception{
 
         // PREPARAMOS
         Arbol arbol = new Arbol();
@@ -60,8 +61,20 @@ public class ArbolTieneRamasIntegrationTest {
 
         String json = objectMapper.writeValueAsString(arbol);
 
-        
-        
+        //Si hacemos el post nos funciona?
+        MvcResult mvcResult = mockMvc.perform(post("/arbol")    //Hacemos un post en arbol, ya que toda la logica esta ahi
+                                .contentType("application/json")//Pasandole un Json
+                                .content(json))                 //Le oasanis ek json que sacamos de arbol
+                                .andExpect(status().isOk())     //Y esperamos que el resultado SEA UN CODIGO 200
+                                .andExpect(result ->{           //Y esperamos que el resultado (RESULT Es una instancia de MvcREsult que encapsula la respuesta http)
+                                    assertNotNull(              //No sea nulo
+                                        objectMapper.readValue( //Cogemos el valor de la cadena
+                                            result.getResponse().getContentAsString(), Arbol.class), //Usamos Jackson para decirle que convierta la cadena en un tipo de variable
+                                            "El arbol tiene ramas" //Sacamos una respuesta por consola 
+                                    );
+                                }).andReturn(); //Devolvemos el MvcREsult
+
+        mvcResult.toString();//Le pasamos un String
     }
 
 }
