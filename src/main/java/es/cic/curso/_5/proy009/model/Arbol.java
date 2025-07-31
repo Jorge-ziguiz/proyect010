@@ -26,7 +26,7 @@ public class Arbol {
     private Long id;
 
     @Version
-    private Long version;
+    private long version;
 
     private String especie;
     private int edad;
@@ -50,7 +50,7 @@ public class Arbol {
     public long getVersion() {
         return version;
     }
-    public void setVersion(Long version) {
+    public void setVersion(long version) {
         this.version = version;
     }
     public String getEspecie() {
