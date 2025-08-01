@@ -25,8 +25,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import es.cic.curso._5.proy009.controller.ArbolController;
 import es.cic.curso._5.proy009.model.Arbol;
 import es.cic.curso._5.proy009.model.Rama;
+import es.cic.curso._5.proy009.service.ArbolService;
 
 
 @SpringBootTest
@@ -40,6 +42,16 @@ public class ArbolTieneRamasIntegrationTest {
     //Object Mapper
     @Autowired
     private ObjectMapper objectMapper;
+
+    //Arbol Controller
+    @Autowired
+    private ArbolController arbolController;
+
+    //Arbol Service
+    @Autowired
+    private ArbolService arbolService;
+
+    //CRUD:
 
     @Test
     public void testCrearArbolConRamas() throws Exception{
@@ -75,6 +87,44 @@ public class ArbolTieneRamasIntegrationTest {
                                 }).andReturn(); //Devolvemos el MvcREsult
 
         mvcResult.toString();//Le pasamos un String
+    }
+
+    @Test
+    public void obtenerArbolConRamas() throws Exception{
+
+         // PREPARAMOS
+        Arbol arbol = new Arbol();
+        arbol.setEspecie("Roble Común");
+        arbol.setAltura(1950);
+        arbol.setEdad(180);
+        arbol.setVersion(1L);
+
+        Rama rama1 = new Rama();
+        rama1.setLongitud(15);
+        rama1.setTieneHojas(false);
+        rama1.setNivel(1);
+
+        //Recordemos que este metodo hace que tambnien se añada el arbol a la rama
+        arbol.addRama(rama1);
+        //Dejamos el arbol creado
+        arbolService.create(arbol);
+        
+        //Hacemos al arbol un Json para usarlo mas adelante
+        String json = objectMapper.writeValueAsString(arbol);
+
+        mockMvc.perform(get("/arbol/"+arbol.getId()))
+                                    .andDo(print())             //Sacame por la consola la petición Y la respuesta
+                                    .andExpect(status().isOk()) //Esperamos que la respuesta http sea 200
+                                    .andExpect(result -> {      //Leemos el contenido Json de la Respuesta
+                                        assertEquals(objectMapper.readValue( //Y esperamos que sea el mismo al Json de Arbol
+                                            result.getResponse().getContentAsString(), //Lo convertimos a string
+                                            Arbol.class).getId(), arbol.getId()); //Le decimos que coja el id y los compare ya que el metodo necesita un Long
+                                    });
+    }
+
+    @Test
+    public void actualizarArbolConRamas() throws Exception{
+        
     }
 
 }
