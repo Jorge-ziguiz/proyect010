@@ -2,6 +2,7 @@ package es.cic.curso._5.proy009.uc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,114 +18,185 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import es.cic.curso._5.proy009.controller.ArbolController;
 import es.cic.curso._5.proy009.model.Arbol;
 import es.cic.curso._5.proy009.model.Rama;
 import es.cic.curso._5.proy009.service.ArbolService;
-
 
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ArbolTieneRamasIntegrationTest {
 
-    //Autowired de MockMvc
-    @Autowired
-    private MockMvc mockMvc;
+        // Autowired de MockMvc
+        @Autowired
+        private MockMvc mockMvc;
 
-    //Object Mapper
-    @Autowired
-    private ObjectMapper objectMapper;
+        // Object Mapper
+        @Autowired
+        private ObjectMapper objectMapper;
 
-    //Arbol Controller
-    @Autowired
-    private ArbolController arbolController;
+        // Arbol Service
+        @Autowired
+        private ArbolService arbolService;
 
-    //Arbol Service
-    @Autowired
-    private ArbolService arbolService;
+        // CRUD:
 
-    //CRUD:
+        @Test
+        public void testCrearArbolConRamas() throws Exception {
 
-    @Test
-    public void testCrearArbolConRamas() throws Exception{
+                Arbol arbol = new Arbol();
+                arbol.setEspecie("Roble Común");
+                arbol.setAltura(1950);
+                arbol.setEdad(180);
+                arbol.setVersion(1L);
 
-        // PREPARAMOS
-        Arbol arbol = new Arbol();
-        arbol.setEspecie("Roble Común");
-        arbol.setAltura(1950);
-        arbol.setEdad(180);
-        arbol.setVersion(1L);
+                Rama rama1 = new Rama();
+                rama1.setLongitud(15);
+                rama1.setTieneHojas(false);
+                rama1.setNivel(1);
 
-        Rama rama1 = new Rama();
-        rama1.setLongitud(15);
-        rama1.setTieneHojas(false);
-        rama1.setNivel(1);
+                arbol.addRama(rama1);
 
-        //Recordemos que este metodo hace que tambnien se añada el arbol a la rama
-        arbol.addRama(rama1);
+                String json = objectMapper.writeValueAsString(arbol);
 
-        String json = objectMapper.writeValueAsString(arbol);
+                String resultJson = mockMvc.perform(post("/arbol")
+                                .contentType("application/json")
+                                .content(json))
+                                .andExpect(status().isOk())
+                                .andDo(print())
+                                .andExpect(result -> {
+                                        assertNotNull(
+                                                        objectMapper.readValue(
+                                                                        result.getResponse().getContentAsString(),
+                                                                        Arbol.class),
+                                                        "El arbol tiene ramas");
+                                }).andReturn().getResponse().getContentAsString();
 
-        //Si hacemos el post nos funciona?
-        MvcResult mvcResult = mockMvc.perform(post("/arbol")    //Hacemos un post en arbol, ya que toda la logica esta ahi
-                                .contentType("application/json")//Pasandole un Json
-                                .content(json))                 //Le oasanis ek json que sacamos de arbol
-                                .andExpect(status().isOk())     //Y esperamos que el resultado SEA UN CODIGO 200
-                                .andExpect(result ->{           //Y esperamos que el resultado (RESULT Es una instancia de MvcREsult que encapsula la respuesta http)
-                                    assertNotNull(              //No sea nulo
-                                        objectMapper.readValue( //Cogemos el valor de la cadena
-                                            result.getResponse().getContentAsString(), Arbol.class), //Usamos Jackson para decirle que convierta la cadena en un tipo de variable
-                                            "El arbol tiene ramas" //Sacamos una respuesta por consola 
-                                    );
-                                }).andReturn(); //Devolvemos el MvcREsult
+                Arbol arbolPost = objectMapper.readValue(resultJson, Arbol.class);
+                Arbol arbolDeLaBaseDatos = (Arbol) arbolService.getArbolById(arbolPost.getId());
 
-        mvcResult.toString();//Le pasamos un String
-    }
+                assertEquals(arbolDeLaBaseDatos, arbolPost);
+                assertEquals(arbolDeLaBaseDatos, arbolPost);
 
-    @Test
-    public void obtenerArbolConRamas() throws Exception{
+        }
 
-         // PREPARAMOS
-        Arbol arbol = new Arbol();
-        arbol.setEspecie("Roble Común");
-        arbol.setAltura(1950);
-        arbol.setEdad(180);
-        arbol.setVersion(1L);
+        @Test
+        public void obtenerArbolConRamas() throws Exception {
 
-        Rama rama1 = new Rama();
-        rama1.setLongitud(15);
-        rama1.setTieneHojas(false);
-        rama1.setNivel(1);
+                // PREPARAMOS
+                Arbol arbol = new Arbol();
+                arbol.setEspecie("Roble Común");
+                arbol.setAltura(1950);
+                arbol.setEdad(180);
+                arbol.setVersion(1L);
 
-        //Recordemos que este metodo hace que tambnien se añada el arbol a la rama
-        arbol.addRama(rama1);
-        //Dejamos el arbol creado
-        arbolService.create(arbol);
-        
-        //Hacemos al arbol un Json para usarlo mas adelante
-        String json = objectMapper.writeValueAsString(arbol);
+                Rama rama1 = new Rama();
+                rama1.setLongitud(15);
+                rama1.setTieneHojas(false);
+                rama1.setNivel(1);
 
-        mockMvc.perform(get("/arbol/"+arbol.getId()))
-                                    .andDo(print())             //Sacame por la consola la petición Y la respuesta
-                                    .andExpect(status().isOk()) //Esperamos que la respuesta http sea 200
-                                    .andExpect(result -> {      //Leemos el contenido Json de la Respuesta
-                                        assertEquals(objectMapper.readValue( //Y esperamos que sea el mismo al Json de Arbol
-                                            result.getResponse().getContentAsString(), //Lo convertimos a string
-                                            Arbol.class).getId(), arbol.getId()); //Le decimos que coja el id y los compare ya que el metodo necesita un Long
-                                    });
-    }
+                // Recordemos que este metodo hace que tambnien se añada el arbol a la rama
+                arbol.addRama(rama1);
 
-    @Test
-    public void actualizarArbolConRamas() throws Exception{
-        
-    }
+                // Dejamos el arbol creado
+                arbolService.create(arbol);
+
+                mockMvc.perform(get("/arbol/" + arbol.getId()))
+                                .andExpect(status().isOk())
+                                .andDo(print())
+                                .andExpect(result -> {
+
+                                        Arbol resultadoArbol = objectMapper.readValue(
+                                                        result.getResponse().getContentAsString(),
+                                                        Arbol.class);
+                                        assertEquals(resultadoArbol.getId(), arbol.getId());
+
+                                        assertEquals(resultadoArbol.getRamas().get(0).getNivel(), rama1.getNivel());
+                                });
+
+        }
+
+        @Test
+        public void actualizarArbolConRamas() throws Exception {
+                // PREPARAMOS
+                Arbol arbol = new Arbol();
+                arbol.setEspecie("Roble Común");
+                arbol.setAltura(1950);
+                arbol.setEdad(180);
+                arbol.setVersion(1L);
+
+                Rama rama1 = new Rama();
+                rama1.setLongitud(15);
+                rama1.setTieneHojas(false);
+                rama1.setNivel(1);
+
+                // Recordemos que este metodo hace que tambnien se añada el arbol a la rama
+                arbol.addRama(rama1);
+
+                // Dejamos el arbol creado
+                String json = objectMapper.writeValueAsString(arbol);
+
+                String resultJson = mockMvc.perform(post("/arbol")
+                                .contentType("application/json")
+                                .content(json))
+                                .andExpect(status().isOk())
+                                .andDo(print())
+                                .andExpect(result -> {
+                                        assertNotNull(
+                                                        objectMapper.readValue(
+                                                                        result.getResponse().getContentAsString(),
+                                                                        Arbol.class),
+                                                        "El arbol tiene ramas");
+                                }).andReturn().getResponse().getContentAsString();
+
+                Arbol arbolPost = objectMapper.readValue(resultJson, Arbol.class);
+                
+                mockMvc.perform(get("/arbol/" + arbolPost.getId()))
+                                .andExpect(status().isOk())
+                                .andDo(print())
+                                .andExpect(result -> {
+
+                                        Arbol resultadoArbol = objectMapper.readValue(
+                                                        result.getResponse().getContentAsString(),
+                                                        Arbol.class);
+                                        assertTrue(resultadoArbol.getId()>0);
+
+                                        assertEquals(resultadoArbol.getRamas().get(0).getNivel(), rama1.getNivel());
+                                });           
+
+
+
+                Arbol arbolActulizado = objectMapper.readValue(resultJson, Arbol.class);
+                arbolActulizado.getRamas().remove(0);
+
+                String JsonActualizado = objectMapper.writeValueAsString(arbolActulizado);
+
+                mockMvc.perform(put("/arbol")
+                                .contentType("application/json")
+                                .content(JsonActualizado))
+                                .andExpect(status().isOk())
+                                .andDo(print())
+                                .andExpect(result -> {
+                                }).andReturn().getResponse().getContentAsString();
+
+                mockMvc.perform(get("/arbol/" + arbolActulizado.getId()))
+                                .andExpect(status().isOk())
+                                .andDo(print())
+                                .andExpect(result -> {
+
+                                        Arbol resultadoArbol = objectMapper.readValue(
+                                                        result.getResponse().getContentAsString(),
+                                                        Arbol.class);
+
+                                        assertTrue(resultadoArbol.getRamas().isEmpty());
+                                });
+
+        }
 
 }

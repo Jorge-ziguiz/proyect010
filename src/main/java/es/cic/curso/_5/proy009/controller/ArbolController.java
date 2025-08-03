@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.cic.curso._5.proy009.exception.ArbolException;
 import es.cic.curso._5.proy009.exception.ModificationSecurityException;
 import es.cic.curso._5.proy009.model.Arbol;
 import es.cic.curso._5.proy009.service.ArbolService;
@@ -22,69 +23,93 @@ import es.cic.curso._5.proy009.service.ArbolService;
 @RequestMapping("/arbol")
 public class ArbolController {
 
-    //Creamos e instanciamos el logger como Final porque me da la gana
+    // Creamos e instanciamos el logger como Final porque me da la gana
     private static final Logger LOGGER = LoggerFactory.getLogger(ArbolController.class);
 
-    //Nos enlacamos al Service y como me da palo inicializar pues autowired
+    // Nos enlacamos al Service y como me da palo inicializar pues autowired
     @Autowired
     private ArbolService arbolService;
 
-    //CRUD
+    // CRUD
 
-    //CREATE (POST)
+    // CREATE (POST)
     @PostMapping
-    public Arbol crearArbol(@RequestBody Arbol arbol){
+    public Arbol crearArbol(@RequestBody Arbol arbol) {
+        // Chequiamos si el usuario se las ha ingeniado para meter un id
+        if (arbol.getId() != null) {
 
-        //Chequiamos si el usuario se las ha ingeniado para meter un id
-        if (arbol.getId() != null){
-
-            //Le damos a sistemas una manita ;)
+            // Le damos a sistemas una manita ;)
             LOGGER.info("El arbol no puede tener un ID en su creación. El id se crea automáticamente");
-            //Lo sacamos por ahi para que no explote el univreso
+            // Lo sacamos por ahi para que no explote el univreso
             throw new ModificationSecurityException("El arbol no puede llevar ID");
 
-        }else {//Si ta to bien (Necesitaremos hablar con los encargados de UI/UX para saber si tenemos que gestionar desde aqui campos vacios)
+        } else {// Si ta to bien (Necesitaremos hablar con los encargados de UI/UX para saber si
+                // tenemos que gestionar desde aqui campos vacios)
 
-            //Info
+            // Info
             LOGGER.info("Arbol creado correctamente");
-            //Creamos
+            // Creamos
             return arbolService.create(arbol);
         }
     }
 
-    //APRENDE A LEER (GET)
+    // APRENDE A LEER (GET)
     @GetMapping("/{id}")
-    public Arbol get (@PathVariable long id){
+    public Arbol get(@PathVariable long id) {
         return arbolService.getArbolById(id);
     }
 
     @GetMapping
-    public List<Arbol> getAll(){
+    public List<Arbol> getAll() {
         return arbolService.get();
     }
 
-    //ACTUALIZAR (PUT)
+    // ACTUALIZAR (PUT)
     @PutMapping
-    public Arbol update(@RequestBody Arbol arbol){
-        return arbolService.update(arbol);
+    public Arbol update(@RequestBody Arbol arbol) {
+        if (arbol.getId() == null) {
+
+            // Actualicamos a los de sistemas de lo que pasa
+            LOGGER.info("Se intenta crear arbol con un id nulo");
+
+            // Lanzamos una excepcion de seguridad
+            throw new ModificationSecurityException("El id no puede ser Nulo");
+
+            // Si NO hay un arbol con ese ID
+        } else if (arbolService.getArbolById(arbol.getId()) == null) {
+
+            // Informamos a los amigos de sistemas
+            LOGGER.info("Se intenta actualizar in arbol que no existe");
+
+            // Lanzamos un ArbolException porque ya existe
+            throw new ArbolException(arbol.getId());
+
+            // En cualquier otro caso
+        } else {
+
+            // Que pesados los de sistemas macho
+            LOGGER.info("Arbol Actualizado Correcramente");
+
+            // Devolvemos el arbol creado
+            return arbolService.update(arbol);
+        }
     }
 
-    //ELIMINAR (DELETE)
+    // ELIMINAR (DELETE)
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable long id){
-        arbolService.deleteById(id);
+    public void deleteById(@PathVariable long id) {
+        arbolService.deleteArbolById(id);
     }
 
     @DeleteMapping
-    public void deleteAll(){
+    public void deleteAll() {
         arbolService.deleteAll();
     }
 
-
-    //COSAS DE RAMA:
+    // COSAS DE RAMA:
 
     @PostMapping("/rama")
-    public Arbol create (@RequestBody Arbol arbol){
+    public Arbol create(@RequestBody Arbol arbol) {
         Arbol arbolCreado = arbolService.create(arbol);
 
         return arbolCreado;

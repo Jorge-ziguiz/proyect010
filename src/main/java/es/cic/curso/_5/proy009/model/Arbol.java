@@ -33,7 +33,7 @@ public class Arbol {
     private double altura;
 
     @OneToMany(
-        mappedBy        = "arbol",          //LO dirige la propia clase
+        //mappedBy        = "arbol",          //LO dirige la propia clase
         cascade         = CascadeType.ALL,  //cascade : si
         orphanRemoval   = true,             //Borramos los que no tengan referencia
         fetch           = FetchType.LAZY    //cargamos solo al llegar al controller(?)
@@ -88,6 +88,19 @@ public class Arbol {
         rama.setArbol(null);
     }
 
+    
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((especie == null) ? 0 : especie.hashCode());
+        result = prime * result + edad;
+        long temp;
+        temp = Double.doubleToLongBits(altura);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -96,26 +109,26 @@ public class Arbol {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Rama other = (Rama) obj;
+        Arbol other = (Arbol) obj;
         if (id == null) {
-            if (other.getId() != null)
+            if (other.id != null)
                 return false;
-        } else if (!id.equals(other.getId()))
+        } else if (!id.equals(other.id))
+            return false;
+        if (especie == null) {
+            if (other.especie != null)
+                return false;
+        } else if (!especie.equals(other.especie))
+            return false;
+        if (edad != other.edad)
+            return false;
+        if (Double.doubleToLongBits(altura) != Double.doubleToLongBits(other.altura))
             return false;
         return true;
     }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        return result;
-    }
-    
     @Override
     public String toString() {
         return "Arbol [id = " + id + ", especie = " + especie + ", edad = " + edad +
-                ", altura =" + altura + ", ramas " + listaRamas +" ]";
+                ", altura =" + altura + "]";
     }
 }

@@ -211,7 +211,7 @@ public class ArbolServiceIntegrationTest {
         Long id = arbol.getId(); //Guardamos el id en una variable para mantenerla despues de borrar
 
         //EJECUTAMOS
-        arbolService.deleteById(id); //Borramos la moto
+        arbolService.deleteArbolById(id); //Borramos la moto
 
         //COMPROBAMOS
         assertFalse(arbolRepository.existsById(id),          //Comprobamos que NO existe la entidad
