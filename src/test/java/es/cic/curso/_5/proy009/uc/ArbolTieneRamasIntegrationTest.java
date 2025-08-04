@@ -65,7 +65,7 @@ public class ArbolTieneRamasIntegrationTest {
 
                 String json = objectMapper.writeValueAsString(arbol);
 
-                String resultJson = mockMvc.perform(post("/arbol")
+                String resultjson = mockMvc.perform(post("/arbol")
                                 .contentType("application/json")
                                 .content(json))
                                 .andExpect(status().isOk())
@@ -78,7 +78,7 @@ public class ArbolTieneRamasIntegrationTest {
                                                         "El arbol tiene ramas");
                                 }).andReturn().getResponse().getContentAsString();
 
-                Arbol arbolPost = objectMapper.readValue(resultJson, Arbol.class);
+                Arbol arbolPost = objectMapper.readValue(resultjson, Arbol.class);
                 Arbol arbolDeLaBaseDatos = (Arbol) arbolService.getArbolById(arbolPost.getId());
 
                 assertEquals(arbolDeLaBaseDatos, arbolPost);
@@ -142,7 +142,7 @@ public class ArbolTieneRamasIntegrationTest {
                 // Dejamos el arbol creado
                 String json = objectMapper.writeValueAsString(arbol);
 
-                String resultJson = mockMvc.perform(post("/arbol")
+                String resultjson = mockMvc.perform(post("/arbol")
                                 .contentType("application/json")
                                 .content(json))
                                 .andExpect(status().isOk())
@@ -155,7 +155,7 @@ public class ArbolTieneRamasIntegrationTest {
                                                         "El arbol tiene ramas");
                                 }).andReturn().getResponse().getContentAsString();
 
-                Arbol arbolPost = objectMapper.readValue(resultJson, Arbol.class);
+                Arbol arbolPost = objectMapper.readValue(resultjson, Arbol.class);
                 
                 mockMvc.perform(get("/arbol/" + arbolPost.getId()))
                                 .andExpect(status().isOk())
@@ -172,14 +172,14 @@ public class ArbolTieneRamasIntegrationTest {
 
 
 
-                Arbol arbolActulizado = objectMapper.readValue(resultJson, Arbol.class);
+                Arbol arbolActulizado = objectMapper.readValue(resultjson, Arbol.class);
                 arbolActulizado.getRamas().remove(0);
 
-                String JsonActualizado = objectMapper.writeValueAsString(arbolActulizado);
+                String jsonActualizado = objectMapper.writeValueAsString(arbolActulizado);
 
                 mockMvc.perform(put("/arbol")
                                 .contentType("application/json")
-                                .content(JsonActualizado))
+                                .content(jsonActualizado))
                                 .andExpect(status().isOk())
                                 .andDo(print())
                                 .andExpect(result -> {
