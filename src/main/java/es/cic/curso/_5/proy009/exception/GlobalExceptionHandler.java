@@ -37,9 +37,9 @@ public class GlobalExceptionHandler {
 
      private String generateBodyNegativeResponses(String mesage) {
         try {
-            MessageResponse mesaggeException = new MessageResponse(mesage);
-            String JsonBody = objectMapper.writeValueAsString(mesaggeException);
-            return JsonBody;
+            MessageResponse mesaggeexception = new MessageResponse(mesage);
+            String jsonbody = objectMapper.writeValueAsString(mesaggeexception);
+            return jsonbody;
         } catch (Exception e) {
             return "";
         }

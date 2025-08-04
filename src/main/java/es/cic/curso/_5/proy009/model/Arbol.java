@@ -105,9 +105,9 @@ public class Arbol {
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if (obj == null)
+        else if (obj == null)
             return false;
-        if (getClass() != obj.getClass())
+        else if (getClass() != obj.getClass())
             return false;
         Arbol other = (Arbol) obj;
         if (id == null) {
@@ -120,9 +120,9 @@ public class Arbol {
                 return false;
         } else if (!especie.equals(other.especie))
             return false;
-        if (edad != other.edad)
+        else if (edad != other.edad)
             return false;
-        if (altura != other.altura)
+        else if (altura != other.altura)
             return false;
         return true;
     }

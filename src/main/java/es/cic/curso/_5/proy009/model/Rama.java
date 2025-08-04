@@ -99,9 +99,9 @@ public class Rama {
         public boolean equals(Object obj) {
             if (this == obj)
                 return true;
-            if (obj == null)
+            else if (obj == null)
                 return false;
-            if (getClass() != obj.getClass())
+            else if (getClass() != obj.getClass())
                 return false;
             Rama other = (Rama) obj;
             if (id == null) {
@@ -109,9 +109,9 @@ public class Rama {
                     return false;
             } else if (!id.equals(other.id))
                 return false;
-            if (Double.doubleToLongBits(longitud) != Double.doubleToLongBits(other.longitud))
+            else if (Double.doubleToLongBits(longitud) != Double.doubleToLongBits(other.longitud))
                 return false;
-            if (nivel != other.nivel)
+            else if (nivel != other.nivel)
                 return false;
             
             return true;
