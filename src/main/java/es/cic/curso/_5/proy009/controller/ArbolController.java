@@ -56,7 +56,14 @@ public class ArbolController {
     // APRENDE A LEER (GET)
     @GetMapping("/{id}")
     public Arbol get(@PathVariable long id) {
-        return arbolService.getArbolById(id);
+        Arbol arbol = null;
+        
+        arbol = arbolService.getArbolById(id);
+
+        if(arbol==null){
+            throw new ArbolException(id);
+        }
+        return arbol;
     }
 
     @GetMapping

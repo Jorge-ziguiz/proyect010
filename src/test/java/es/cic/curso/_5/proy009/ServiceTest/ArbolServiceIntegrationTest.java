@@ -55,22 +55,6 @@ public class ArbolServiceIntegrationTest {
                     "El arbol deberia existir en la BBDD");
     }
 
-    @Test
-    @DisplayName("Lanza una excepción cuando la moto venga con un ID")
-    void shouldRejectCreateWithID(){
-
-        // PREPARAMOS
-        Arbol arbol = new Arbol();
-        arbol.setEspecie("Roble Común");
-        arbol.setAltura(1950);
-        arbol.setEdad(180);
-        arbol.setId(20L);
-
-        //AssertThrows 
-        //Syntaxis: assertThrows(Exception excepción_Esperada, String MensajeDeError)
-        //Nos devuelve la excepción que se lanze durante la ejecución.
-        //assertThrows(ModificationSecurityException.class, () -> arbolService.create(arbol));
-    }
 
     //READ TEST
 
@@ -170,31 +154,7 @@ public class ArbolServiceIntegrationTest {
       }
 
 
-    @Test
-    @DisplayName("Lanza un error 400 si no tiene ID")
-    void shouldRejectUpdateWithoutId(){
 
-        //PREPARAMOS
-        Arbol arbolSinId = new Arbol();    //Creamos un arbol
-        arbolSinId.setId(null);       //Establecemos un ID nulo
-
-        //EJECUTAMOS Y COMPROBAMOS
-        //assertThrows(ModificationSecurityException.class,   //Esperamos una ModificationSecirityException
-        //                        () -> arbolService.update(arbolSinId));              //Al hacer el update con id Null
-    }
-
-    @Test
-    @DisplayName("Lanza un 404 si no existe en la base de datos")
-    void shouldRejectUpdateNonExisting(){
-
-        //PREPARAMOS
-        Arbol arbolVacio = new Arbol ();
-        arbolVacio.setId(1234L);
-
-        //EJECUTAMOS Y COMPROBAMOS
-        //assertThrows(ArbolException.class,       //Esperamos una ArbolException
-        //             () -> arbolService.update(arbolVacio));//Al hacer el update de motoVacia
-    }   
 
     @Test
     @DisplayName("Elimina una entrada de moto existente en la BBDD")

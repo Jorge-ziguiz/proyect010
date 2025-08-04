@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ArbolException.class)
     public ResponseEntity<String> handleArbolException(ArbolException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(generateBodyNegativeResponses(e.getMessage()));
 
     }
