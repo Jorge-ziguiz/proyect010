@@ -113,8 +113,7 @@ public class Rama {
                 return false;
             if (nivel != other.nivel)
                 return false;
-            if (tieneHojas != other.tieneHojas)
-                return false;
+            
             return true;
         }
 

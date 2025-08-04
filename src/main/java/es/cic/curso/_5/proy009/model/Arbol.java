@@ -122,7 +122,7 @@ public class Arbol {
             return false;
         if (edad != other.edad)
             return false;
-        if (Double.doubleToLongBits(altura) != Double.doubleToLongBits(other.altura))
+        if (altura != other.altura)
             return false;
         return true;
     }
