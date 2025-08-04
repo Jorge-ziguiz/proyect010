@@ -108,18 +108,4 @@ public class ArbolController {
         arbolService.deleteArbolById(id);
     }
 
-    @DeleteMapping
-    public void deleteAll() {
-        arbolService.deleteAll();
-    }
-
-    // COSAS DE RAMA:
-
-    @PostMapping("/rama")
-    public Arbol create(@RequestBody Arbol arbol) {
-        Arbol arbolCreado = arbolService.create(arbol);
-
-        return arbolCreado;
-    }
-
 }
