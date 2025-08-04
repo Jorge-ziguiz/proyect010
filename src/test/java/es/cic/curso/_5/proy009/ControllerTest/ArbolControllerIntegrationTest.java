@@ -130,7 +130,6 @@ public class ArbolControllerIntegrationTest {
 
                 mockMvc.perform(get("/arbol/{id}", idInexistente))
                                 .andExpect(status().isNotFound());
-                               
         }
 
       /**

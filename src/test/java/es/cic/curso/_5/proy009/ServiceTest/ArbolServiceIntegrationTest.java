@@ -39,7 +39,6 @@ public class ArbolServiceIntegrationTest {
      @DisplayName("Crea un coche nuevo y le asigna automaticamente un ID")
      void shouldCreateArbol(){
 
-        
         // PREPARAMOS
         Arbol arbol = new Arbol();
         arbol.setEspecie("Roble Común");
@@ -78,13 +77,7 @@ public class ArbolServiceIntegrationTest {
         assertEquals(180, result.getEdad());//La edad es la correcta
     }
 
-    @Test
-     @DisplayName("Nos lanzará una excepcion si la moto no existe o es null")
-     void shouldThrowWhenNotFound(){
 
-
-
-    }
 
     @Test
     @DisplayName("Nos devolvera todos los coches")
