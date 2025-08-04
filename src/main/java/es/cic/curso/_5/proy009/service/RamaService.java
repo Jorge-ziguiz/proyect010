@@ -16,7 +16,7 @@ import es.cic.curso._5.proy009.repository.RamaRepository;
 @Service
 @Transactional
 public class RamaService {
-    private final static Logger LOGGER = LoggerFactory.getLogger(Rama.class);
+    private final  Logger LOGGER = LoggerFactory.getLogger(Rama.class);
 
     @Autowired 
     private RamaRepository ramaRepository;
