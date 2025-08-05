@@ -16,39 +16,41 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.cic.curso._5.proy009.exception.ArbolException;
 import es.cic.curso._5.proy009.exception.ModificationSecurityException;
+import es.cic.curso._5.proy009.exception.RamaException;
 import es.cic.curso._5.proy009.model.Arbol;
+import es.cic.curso._5.proy009.model.Rama;
 import es.cic.curso._5.proy009.service.ArbolService;
+import es.cic.curso._5.proy009.service.RamaService;
 
 @RestController
 @RequestMapping("/arbol")
 public class ArbolController {
 
-    // Creamos e instanciamos el logger como Final porque me da la gana
     private static final Logger LOGGER = LoggerFactory.getLogger(ArbolController.class);
 
-    // Nos enlacamos al Service y como me da palo inicializar pues autowired
     @Autowired
     private ArbolService arbolService;
 
-    // CRUD
+    @Autowired
+    private RamaService ramaService;
 
-    // CREATE (POST)
+    // CRUD
     @PostMapping
     public Arbol crearArbol(@RequestBody Arbol arbol) {
-        // Chequiamos si el usuario se las ha ingeniado para meter un id
         if (arbol.getId() != null) {
-
-            // Le damos a sistemas una manita ;)
             LOGGER.info("El arbol no puede tener un ID en su creación. El id se crea automáticamente");
-            // Lo sacamos por ahi para que no explote el univreso
             throw new ModificationSecurityException("El arbol no puede llevar ID");
 
-        } else {// Si ta to bien (Necesitaremos hablar con los encargados de UI/UX para saber si
-                // tenemos que gestionar desde aqui campos vacios)
-
-            // Info
+        } else {
             LOGGER.info("Arbol creado correctamente");
-            // Creamos
+            if (arbol.getRamas() != null && arbol.getRamas().size() > 0) {
+                for (Rama rama : arbol.getRamas()) {
+                    if (rama.getId() != null) {
+                        throw new ModificationSecurityException(
+                                "No se puede crear un rama con un ID DADO POR EL USUARIO");
+                    }
+                }
+            }
             return arbolService.create(arbol);
         }
     }
@@ -57,10 +59,10 @@ public class ArbolController {
     @GetMapping("/{id}")
     public Arbol get(@PathVariable long id) {
         Arbol arbol = null;
-        
+
         arbol = arbolService.getArbolById(id);
 
-        if(arbol==null){
+        if (arbol == null) {
             throw new ArbolException(id);
         }
         return arbol;
@@ -75,29 +77,28 @@ public class ArbolController {
     @PutMapping
     public Arbol update(@RequestBody Arbol arbol) {
         if (arbol.getId() == null) {
-
-            // Actualicamos a los de sistemas de lo que pasa
             LOGGER.info("Se intenta crear arbol con un id nulo");
-
-            // Lanzamos una excepcion de seguridad
             throw new ModificationSecurityException("El id no puede ser Nulo");
 
-            // Si NO hay un arbol con ese ID
         } else if (arbolService.getArbolById(arbol.getId()) == null) {
-
-            // Informamos a los amigos de sistemas
             LOGGER.info("Se intenta actualizar in arbol que no existe");
-
-            // Lanzamos un ArbolException porque ya existe
             throw new ArbolException(arbol.getId());
 
-            // En cualquier otro caso
         } else {
+            if (arbol.getRamas() != null && arbol.getRamas().size() > 0) {
+                for (Rama rama : arbol.getRamas()) {
+                    if (rama.getId() == null) {
+                        LOGGER.info("Se intenta crear rama con un id nulo");
+                        throw new ModificationSecurityException("El id no puede ser Nulo");
 
-            // Que pesados los de sistemas macho
+                    } else if (ramaService.getRamaById(rama.getId()) != null) {
+                        LOGGER.info("Se intenta actualizar in rama que no existe");
+                        throw new RamaException(rama.getId());
+                    }
+                }
+            }
+
             LOGGER.info("Arbol Actualizado Correcramente");
-
-            // Devolvemos el arbol creado
             return arbolService.update(arbol);
         }
     }

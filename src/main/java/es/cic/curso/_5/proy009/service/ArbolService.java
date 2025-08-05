@@ -1,7 +1,5 @@
 package es.cic.curso._5.proy009.service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -11,9 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.cic.curso._5.proy009.exception.ArbolException;
-import es.cic.curso._5.proy009.exception.ModificationSecurityException;
 import es.cic.curso._5.proy009.model.Arbol;
-import es.cic.curso._5.proy009.model.Rama;
 import es.cic.curso._5.proy009.repository.ArbolRepository;
 
 @Service
@@ -27,12 +23,10 @@ public class ArbolService {
     private ArbolRepository arbolRepository;
 
     // Vamos con el CRUD
-
+    
     // Create
-
     public Arbol create(Arbol arbol) {
         LOGGER.info("Creamos un arbol");
-
         return arbolRepository.save(arbol);
     }
 
@@ -52,14 +46,10 @@ public class ArbolService {
     }
 
     // Update
-
     public Arbol update(Arbol arbol) {
-
         LOGGER.info("Actualizando Arbol...");
-
         // Filtramos
         // Si no tiene ID
-        
         return arbolRepository.save(arbol);
 
     }
@@ -71,10 +61,8 @@ public class ArbolService {
     }
 
     public void deleteAll() {
-
         // El clasico
         LOGGER.info("Borramos TODOS LOS ARBOLES GENTE, PANICO (pero solo si habia algo importante)");
-
         arbolRepository.deleteAll();
     }
 

@@ -109,7 +109,7 @@ public class Rama {
                     return false;
             } else if (!id.equals(other.id))
                 return false;
-            else if (Double.doubleToLongBits(longitud) != Double.doubleToLongBits(other.longitud))
+            else if (longitud != other.longitud)
                 return false;
             else if (nivel != other.nivel)
                 return false;

@@ -135,9 +135,9 @@ public class Mesa {
                 return false;
         } else if (!estilo.equals(other.estilo))
             return false;
-        if (Double.doubleToLongBits(longitud) != Double.doubleToLongBits(other.longitud))
+        else if (longitud != other.longitud)
             return false;
-        if (Double.doubleToLongBits(precio) != Double.doubleToLongBits(other.precio))
+        else if (precio != other.precio)
             return false;
         return true;
     }
