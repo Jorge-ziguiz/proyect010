@@ -29,8 +29,8 @@ import es.cic.curso._5.proy009.model.Arbol;
 import es.cic.curso._5.proy009.model.Rama;
 import es.cic.curso._5.proy009.service.ArbolService;
 
-@SpringBootTest
 @AutoConfigureMockMvc
+@SpringBootTest
 public class ArbolTieneRamasIntegrationTest {
 
         // Autowired de MockMvc
